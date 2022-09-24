@@ -19,14 +19,26 @@ login_manager.login_view = "login"
 
 
 class User(UserMixin, db.Model):
+    __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     name = db.Column(db.String(100), unique=True)
-    todo = relationship("Todo", back_populates="")
+    todo = relationship("Todo", back_populates="todos")
 
 
-# db.create_all()
+db.create_all()
+
+
+class Todo(db.Model):
+    __tablename__ = "todo"
+    id = db.Column(db.Integer, primary_key=True)
+    todo_list = db.Column(db.String(255), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    todos = relationship("User", back_populates="todo")
+
+
+db.create_all()
 
 
 @login_manager.user_loader
@@ -34,55 +46,22 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-class Todo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    todo = db.Column(db.String(255), nullable=False)
-
-
-# db.create_all()
-
-
-def admin_only(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if current_user.id != 1:
-            return abort(403)
-        return f(*args, **kwargs)
-
-    return decorated_function
-
-
 @app.route('/', methods=["POST", "GET"])
 @login_required
 def home():
-    requested_todo = Todo.query.all()
+    requested_todo = Todo.query.filter_by(user_id=current_user.id)
     if request.method == "POST":
         todo = request.form.get('todo')
-        entry = Todo(todo=todo)
+        entry = Todo(todo_list=todo, user_id=current_user.id)
         db.session.add(entry)
         db.session.commit()
         return redirect(url_for("home"))
     return render_template("index.html", todos=requested_todo, name=current_user)
 
 
-# @app.route('/', methods=["POST", "GET"])
-# def home():
-#     Todo.query.delete()
-#     db.session.commit()
-#
-#     return render_template("index.html")
-
-
 @app.route('/register', methods=["GET", "POST"])
 def register():
     form = RegisterForm()
-    # if form.validate_on_submit():
-    # hashed_password = generate_password_hash(form.password.data, method="sha256")
-    # new_user = User(email=form.email.data, password=hashed_password, name=form.username.data)
-    # db.session.add(new_user)
-    # db.session.commit()
-    # login_user(new_user)
-    # return redirect(url_for("home"))
     if form.validate_on_submit():
         if User.query.filter_by(email=form.email.data).first():
             print(User.query.filter_by(email=form.email.data).first())
@@ -97,7 +76,7 @@ def register():
         )
         new_user = User(
             email=form.email.data,
-            name=form.name.data,
+            name=form.username.data,
             password=hash_and_salted_password,
         )
         db.session.add(new_user)
@@ -110,15 +89,6 @@ def register():
 @app.route('/login', methods=["GET", "POST"])
 def login():
     form = LoginForm()
-    # if form.validate_on_submit():
-    #     # return "<h1>" + form.username.data + " " + form.password.data + "<h1>"
-    #     user = User.query.filter_by(name=form.username.data).first()
-    #     if user:
-    #         if check_password_hash(user.password, form.password.data):
-    #             login_user(user, remember=form.remember.data)
-    #             return redirect(url_for("home"))
-    #     else:
-    #         return "<h1> Invalid username and password </h1>"
     if form.validate_on_submit():
         name = form.username.data
         password = form.password.data
@@ -144,7 +114,12 @@ def logout():
     return render_template("logout.html")
 
 
-# db.session.close_all()
+@app.route("/delete/<todo_id>")
+def delete(todo_id):
+    todo_delete = Todo.query.get(todo_id)
+    db.session.delete(todo_delete)
+    db.session.commit()
+    return redirect(url_for("home"))
 
 
 if __name__ == '__main__':

@@ -4,10 +4,13 @@
 {% block content %}
 <!-- Page Header -->
 
-<div class="container">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css')}}">
+<div class="center container">
     <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
             <form method="POST" action="/register">
+                    <h1>Register</h1>
+                    <hr>
                     {{ form.hidden_tag() }}
                     {{ wtf.form_field(form.username) }}
                     {{ wtf.form_field(form.email) }}

@@ -1,0 +1,32 @@
+.center {
+    padding-left: 10%;
+    border: 2px #8d99ae solid;
+    border-radius: 5%;
+    margin-top: 12%;
+    width: 40%;
+    background-color: #e5e5e5;
+}
+
+hr {
+    background-color:black;
+    border-radius: 50%;
+    height: 2px;
+}
+
+body {
+    background-color: white;
+}
+
+.flash-message {
+    color: red;
+}
+
+h1 {
+    text-align: center;
+}
+
+@media only screen and (max-width: 590px) {
+    .center {
+        width: 100%;
+    }
+}

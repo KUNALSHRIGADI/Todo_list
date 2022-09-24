@@ -2,15 +2,64 @@
     margin-top:50px;
 }
 
-
 .label {
     font-size: 20px;
     margin-left: 10px;
     margin-top: 10px;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: capitalize;
+}
+
+.col-2 {
+    padding-top:5px;
+}
+
+.delete_btn {
+    background-color: transparent;
+}
+
+.check-todo {
+    margin-left: 10%;
+    margin-bottom: 5px;
+    width: 80%;
+}
+
+.col-11 {
+    text-align: left;
+}
+
+.row {
+    width: 100%;
+}
+
+.todo-fluid {
+    width: 100%;
 }
 
 .welcome {
     background-color: #edf2f4;
     margin-top: 10px;
     padding: 20px;
+    text-align: center;
+}
+
+.logo {
+    font-size: 25px;
+    font-family: 'Kaushan Script', cursive;
+}
+
+.todo-text {
+    width: 70%;
+    padding: 20px;
+    border: none;
+}
+
+span {
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.navs {
+    font-size: 15px;
+    margin-left: 90%;
 }
