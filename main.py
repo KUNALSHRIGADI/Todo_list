@@ -5,12 +5,13 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, cur
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 from forms import RegisterForm, LoginForm
+import os
 from functools import wraps
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = "qwertyuiop"
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 bootstrap = Bootstrap(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///todo.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 login_manager = LoginManager()
