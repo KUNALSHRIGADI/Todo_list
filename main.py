@@ -11,7 +11,7 @@ from functools import wraps
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 bootstrap = Bootstrap(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("postgres://rthvdpizmfygnh:4613e4bf079f5e09679dcc3199e8ee346d88e92890592eaa5f0c690371ed147c@ec2-44-207-253-50.compute-1.amazonaws.com:5432/d53lqcj7qbg2ph", "sqlite:///todo.db")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 login_manager = LoginManager()
